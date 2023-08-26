@@ -1,0 +1,57 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: linear-gradient(
+    45deg,
+    hsl(240deg 100% 20%) 0%,
+    hsl(253deg 69% 30%) 10%,
+    hsl(256deg 53% 41%) 20%,
+    hsl(258deg 46% 52%) 30%,
+    hsl(260deg 62% 63%) 40%,
+    hsl(261deg 94% 75%) 50%,
+    hsl(262deg 90% 79%) 60%,
+    hsl(263deg 85% 83%) 70%,
+    hsl(264deg 74% 87%) 80%,
+    hsl(265deg 54% 91%) 90%,
+    hsl(0deg 0% 95%) 100%
+  );
+}
+.welcome-message{
+  color: black;
+  font-size: 20px;
+  text-align: center;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn {
+  background-color: white;
+  text-decoration: none;
+  padding: 13px;
+  margin: 10px;
+  box-shadow: 5px 5px 5px black;
+  border-radius: 6px 0px ;
+  letter-spacing: 1.4px;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  color: black;
+  cursor: pointer;
+  font-weight: 400;
+ }
+
+ .btn:hover{
+  box-shadow: 5px 10px 5px rgb(45, 44, 44);
+}
+
+@media (max-width : 768px) {
+  .welcome-message h1{
+    font-size: 25px;
+  }
+}

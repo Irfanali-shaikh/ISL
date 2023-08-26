@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indian Sign Language Recognition</title>
+    <link rel="stylesheet" href="./static/chart.css" />
+    <link rel="icon" type="image/x-icon" href="./static/fav.png">
+  </head>
+  <body>
+    <div class="container">
+      <div class="welcome-message">
+        <h1>Welcome to Indian Sign Language Recognition</h1>
+      </div>
+      <hr />
+      <div class="btn-container">
+        <form method="POST" action="/video_character" enctype="multipart/form-data">
+          <input type="file" id="upload" hidden  name="video" accept="video/*"/>
+          <label for="upload" class="btn">Choose file</label>
+
+          <!-- <input type="file" class="btn" name="video" accept="video/*" /> -->
+          <input type="submit" class="btn" value="Upload" />
+        </form>
+        <a href="/live_character" class="btn btn-secondary">Charcter Go Live</a>
+      </div>
+    </div>
+  </body>
+</html>

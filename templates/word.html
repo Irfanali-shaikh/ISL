@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Sign Language Recognition</title>
+    <link rel="stylesheet" href="./static/word.css" />
+    <link rel="icon" type="image/x-icon" href="./static/fav.png">
+  </head>
+  <body>
+    <div class="container">
+      <div class="welcome-message">
+        <h1>Welcome to Indian Sign Language Recognition</h1>
+      </div>
+      <hr class="mb-5" />
+      <div class="btn-container">
+        <form method="POST" action="/video_word" enctype="multipart/form-data">
+          <input type="file" id="upload" hidden  name="video" accept="video/*"/>
+          <label for="upload" class="btn">Choose file</label>
+
+          <!-- <input type="file" name="video" accept="video/*" class="btn label"/> choose File -->
+          <input type="submit" value="Upload" type="button" class="btn" />
+        </form>
+        <a href="/live_word" type="button" class="btn">Word Go Live</a>
+      </div>
+    </div>
+  </body>
+</html>
+
+
