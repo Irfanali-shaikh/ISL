@@ -1,4 +1,4 @@
-#from flask_ngrok import run_with_ngrok
+from flask_ngrok import run_with_ngrok
 from flask import Flask, render_template, Response,request
 import cv2
 import os
@@ -7,11 +7,16 @@ import numpy as np
 import os
 import time
 import mediapipe as mp
-#from preprocess import mediapipe_detection,landmarks,draw_styled_landmarks,extract_keypoints
+from tensorflow.keras.utils import to_categorical
+from preprocess import mediapipe_detection,landmarks,draw_styled_landmarks,extract_keypoints
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM,Dense
+from tensorflow.keras.callbacks import TensorBoard
 from tensorflow import keras
-from tkinter import *
+import pyttsx3
+from tkinter import * 
 from PIL import ImageTk,Image
-from pyngrok import ngrok
 
 
 ind = 0
@@ -23,7 +28,7 @@ def draw_styled_landmark(image,results):
     mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS,
                             mp_drawing.DrawingSpec(color = (121,22,76), thickness = 2, circle_radius = 4),
                             mp_drawing.DrawingSpec(color = (121,44,250), thickness = 2, circle_radius = 2))
-
+    
     mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS,
                             mp_drawing.DrawingSpec(color = (245,117,66), thickness = 2, circle_radius = 4),
                             mp_drawing.DrawingSpec(color = (245,66,230), thickness = 2, circle_radius = 2))
@@ -40,22 +45,21 @@ tt = {0:'A',1:'B',2:'C',3:'D',4:'E',
         20:' ',21:'T',22:'U',23:'V',24:'W',
         25:'X',26:'Y',27:'Z'}
 
-
+model = keras.models.load_model('Perfect_28_Character_relu.h5')
 
 def pred(test_path):
-    model = keras.models.load_model('/content/drive/MyDrive/ISL/Perfect_28_Character_relu.h5')
     #test_path = np.load(test_path)
     x = model.predict(test_path.reshape(-1,126))
     return tt[np.argmax(x)]
 
 
-def gen_frames(paths):
+def gen_frames(paths): 
     char = []
     word = []
     frames = 0
     cap = cv2.VideoCapture(paths)
     with mp_holistic.Holistic(min_detection_confidence = 0.5, min_tracking_confidence = 0.4) as holistic:
-        while True:
+        while True: 
             _,frame = cap.read()
             if not _:
                 break
@@ -89,7 +93,7 @@ def gen_frames(paths):
 
 
 def isl(path):
-
+    
     # ax = os.listdir('E:/M.Tech/Final/Word/Mp_Data/')
     actions = ['Afternoon', 'Blind', 'Good', 'Hello', 'Home', 'Marriage', 'Sad', 'Thanks', '_']
     # label_map = {}
@@ -100,7 +104,7 @@ def isl(path):
 
     # action = np.array(actions)
 
-    model = keras.models.load_model('/content/drive/MyDrive/ISL/Perfect_9_GRU.h5')
+    model = keras.models.load_model('Perfect_9_GRU.h5')
 
     x_test = np.zeros((12,30,1662))
     res = model.predict(x_test)
@@ -125,15 +129,15 @@ def isl(path):
 
             if len(sequence) == 30:
                 res = model.predict(np.expand_dims(sequence, axis = 0))[0]
-                print(actions[np.argmax(res)])
-                print(res)
+                #print(actions[np.argmax(res)])
+                #print(res)
                 predictions.append(np.argmax(res))
                 t = max(res)
 
             #hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             if np.unique(predictions[-10:])[0] == np.argmax(res):
-                if res[np.argmax(res)] > threshold:
-                    print('....',np.unique(predictions[-10:])[0],'....')
+                if res[np.argmax(res)] >= threshold:
+                    #print('....',np.unique(predictions[-10:])[0],'....')
                     if len(sentence) >0:
                         if actions[np.argmax(res)] != sentence[-1]:
                             sentence.append(actions[np.argmax(res)])
@@ -147,7 +151,7 @@ def isl(path):
             if len(sentence) >5:
                 sentence = sentence[-5:]
 
-            cv2.rectangle(image,(0,0),(640,40),(0,0,0),-1)
+            cv2.rectangle(image,(0,0),(640,80),(0,0,0),-1)
             cv2.putText(image,' '.join(sentence),(3,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,255),1,cv2.LINE_AA)
 
             ret, buffer = cv2.imencode('.jpg', image)
@@ -161,11 +165,7 @@ def isl(path):
 
 
 app = Flask(__name__)
-ngrok.set_auth_token("2TSEd8mvH5T0Ps89oJeY1etF4bx_4XsNe9KRArJEVNTM2eTvu")
-public_url = ngrok.connect(5000).public_url
 #run_with_ngrok(app)
-
-
 
 @app.route('/')
 def index():
@@ -211,7 +211,7 @@ def video_word():
     #return render_template('display.html', video_url=video_url)
 
 
-print(public_url)
+
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run()
